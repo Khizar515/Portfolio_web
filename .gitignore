@@ -7,7 +7,7 @@
 # 🔐 Environment & Secrets  (NEVER push these)
 # ─────────────────────────────────────────
 .env
-.env.*
+# .env.*
 !.env.example          # keep the example template
 
 # ─────────────────────────────────────────
