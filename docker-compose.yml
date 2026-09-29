@@ -46,7 +46,11 @@ services:
       - portfolio_net
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        # Forward NEXT_PUBLIC_API_URL into the build so Next.js inlines it at compile time
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     container_name: portfolio_frontend
     restart: unless-stopped
     environment:
