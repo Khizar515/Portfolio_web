@@ -164,9 +164,9 @@ export default function Home() {
   // Extract first part of tagline for the big heading
   const rawTagline = profile.Tagline || 'Full-Stack & Mobile Developer';
   // Split by |, -, or , to get the first part
-  const taglineParts = rawTagline.split(/\||-|,/);
+  const taglineParts = rawTagline.split('|');
   const heroHeading = taglineParts[0].trim();
-  const heroSubheading = taglineParts.slice(1).join(' | ').trim();
+  const heroSubheading = rawTagline;
 
 
   return (
