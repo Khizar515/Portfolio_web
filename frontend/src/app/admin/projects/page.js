@@ -20,7 +20,7 @@ export default function ProjectsAdmin() {
   const [message, setMessage] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+  const API_BASE = '';
 
   const fetchProjects = async () => {
     try {

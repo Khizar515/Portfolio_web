@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { label: 'Contact', id: 'contact' },
 ];
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+const API_BASE = '';
 
 function SectionTitle({ children }) {
   return (
@@ -132,9 +132,9 @@ export default function Home() {
   const filteredProjects = activeFilter === 'all'
     ? baseProjects
     : baseProjects.filter(p => {
-        const tags = Array.isArray(p.Tech_Tags) ? p.Tech_Tags : (typeof p.Tech_Tags === 'string' ? JSON.parse(p.Tech_Tags || '[]') : []);
-        return tags.some(t => t.toLowerCase().includes(activeFilter.toLowerCase()));
-      });
+      const tags = Array.isArray(p.Tech_Tags) ? p.Tech_Tags : (typeof p.Tech_Tags === 'string' ? JSON.parse(p.Tech_Tags || '[]') : []);
+      return tags.some(t => t.toLowerCase().includes(activeFilter.toLowerCase()));
+    });
 
   // Helper
   function isVideo(path) {

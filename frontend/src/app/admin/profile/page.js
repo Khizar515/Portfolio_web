@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '@/lib/api';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+const API_BASE = '';
 
 // Helper: download a file using axios (so JWT header is included)
 // Returns null on success, or an error message string on failure

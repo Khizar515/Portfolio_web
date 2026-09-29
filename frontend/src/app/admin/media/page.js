@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '@/lib/api';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:5000';
+const API_BASE = '';
 const IMAGE_EXTS = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
 
 function formatBytes(bytes) {
@@ -21,7 +21,7 @@ export default function MediaAdmin() {
 
   const fetchData = async () => {
     try { const res = await api.get('/admin/media'); setFiles(res.data); }
-    catch {} finally { setLoading(false); }
+    catch { } finally { setLoading(false); }
   };
   useEffect(() => { fetchData(); }, []);
 
