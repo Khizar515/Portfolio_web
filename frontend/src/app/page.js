@@ -161,6 +161,14 @@ export default function Home() {
     ? `${API_BASE}/uploads/${profile.Resume_Path}`
     : '#';
 
+  // Extract first part of tagline for the big heading
+  const rawTagline = profile.Tagline || 'Full-Stack & Mobile Developer';
+  // Split by |, -, or , to get the first part
+  const taglineParts = rawTagline.split(/\||-|,/);
+  const heroHeading = taglineParts[0].trim();
+  const heroSubheading = taglineParts.slice(1).join(' | ').trim();
+
+
   return (
     <>
       {/* STICKY HEADER */}
@@ -229,17 +237,14 @@ export default function Home() {
 
             <div className="space-y-4">
               <p className="font-sans text-[48px] leading-[56px] tracking-[-0.03em] font-[600] text-on-surface">
-                Full-Stack &amp; Mobile Developer
+                {heroHeading}
               </p>
-              <p className="font-sans text-[20px] leading-[28px] text-on-surface-variant font-normal">
-                {profile.Tagline || 'Full-Stack Developer'}{' '}
-              </p>
+              {heroSubheading && (
+                <p className="font-sans text-[20px] leading-[28px] text-on-surface-variant font-normal">
+                  {heroSubheading}
+                </p>
+              )}
             </div>
-
-            <div
-              className="font-sans text-[16px] leading-[26px] text-[#8a919b] max-w-2xl"
-              dangerouslySetInnerHTML={{ __html: profile.Bio_HTML || '' }}
-            />
 
             <div className="flex flex-wrap items-center gap-6 pt-2">
               <a href="#projects" className="text-primary hover:text-[#96cbff] flex items-center gap-1.5 transition-colors text-[14px]">
@@ -579,7 +584,7 @@ export default function Home() {
 
             {/* Footer signoff */}
             <div className="pt-16 pb-8 border-t border-[#414750]/30 text-[#8a919b] font-mono text-[11px] flex flex-col sm:flex-row justify-between gap-3">
-              <p>{profile.Full_Name || 'Khizar Nadeem'} <span className="text-[#414750]">|</span> Full-Stack &amp; Mobile Developer</p>
+              <p>{profile.Full_Name || 'Khizar Nadeem'} <span className="text-[#414750]">|</span> {heroHeading}</p>
               <p>© {new Date().getFullYear()}</p>
             </div>
           </section>
@@ -595,7 +600,7 @@ export default function Home() {
               {profile.Full_Name || 'Khizar Nadeem'} © {new Date().getFullYear()}
             </span>
           </div>
-          <p className="font-sans text-[13px] text-[#8a919b]">Full-Stack &amp; Mobile Developer</p>
+          <p className="font-sans text-[13px] text-[#8a919b]">{heroHeading}</p>
         </div>
       </footer>
     </>
