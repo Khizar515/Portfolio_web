@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+  // NEXT_PUBLIC_API_URL is baked as '/api' at build time.
+  // Calls go to khizar.ksdev.me/api/* which Next.js rewrites proxy to the backend container.
+  baseURL: process.env.NEXT_PUBLIC_API_URL || '/api',
 });
 
 // Request interceptor to add JWT token if exists

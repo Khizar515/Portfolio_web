@@ -49,12 +49,12 @@ services:
     build:
       context: ./frontend
       args:
-        # Forward NEXT_PUBLIC_API_URL into the build so Next.js inlines it at compile time
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        # /api is relative — browser calls khizar.ksdev.me/api/* which Next.js rewrites proxy to backend
+        NEXT_PUBLIC_API_URL: /api
+        # Docker-internal address the Next.js SERVER uses to reach backend for rewrites
+        INTERNAL_API_URL: http://backend:5000
     container_name: portfolio_frontend
     restart: unless-stopped
-    environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     ports:
       # Bound to 127.0.0.1 — reachable by the Cloudflare tunnel but NOT exposed on the public IP
       - "127.0.0.1:3000:3000"
