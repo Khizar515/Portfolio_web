@@ -13,6 +13,12 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - portfolio_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${DB_USER}", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   backend:
     build: ./backend
@@ -29,11 +35,13 @@ services:
       PORT: 5000
     volumes:
       - uploads_data:/app/uploads
-      - database_exports:/app/exports # For DB exports
+      - database_exports:/app/exports
     ports:
-      - "5000:5000"
+      # Bound to 127.0.0.1 — reachable by the Cloudflare tunnel but NOT exposed on the public IP
+      - "127.0.0.1:5000:5000"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     networks:
       - portfolio_net
 
@@ -44,7 +52,8 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     ports:
-      - "3000:3000"
+      # Bound to 127.0.0.1 — reachable by the Cloudflare tunnel but NOT exposed on the public IP
+      - "127.0.0.1:3000:3000"
     depends_on:
       - backend
     networks:

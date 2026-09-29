@@ -15,8 +15,15 @@ app.use(helmet({
 }));
 
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+const allowedOrigins = [
+  'https://khizar.ksdev.me',       // Production — Cloudflare tunnel
+  frontendUrl,                      // Configurable via FRONTEND_URL env var
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://127.0.0.1:3000',
+];
 app.use(cors({
-  origin: [frontendUrl, 'http://localhost:3001', 'http://127.0.0.1:3000'],
+  origin: allowedOrigins,
   credentials: true
 }));
 
