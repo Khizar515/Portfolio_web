@@ -1,6 +1,13 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import BackgroundEffects from '@/components/BackgroundEffects';
 import api from '@/lib/api';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }
+};
 import Link from 'next/link';
 
 const NAV_ITEMS = [
@@ -214,11 +221,17 @@ export default function Home() {
       </header>
 
       {/* PAGE BODY */}
-      <main className="w-full pt-16">
+      <BackgroundEffects />
+      <main className="w-full pt-16 relative z-10">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 py-16 sm:py-24 space-y-28 sm:space-y-36">
 
           {/* ── HERO ─────────────────────────────────────────── */}
-          <header className="space-y-8 pt-4">
+          <motion.header 
+            className="space-y-8 pt-4"
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+          >
             <div className="flex items-center gap-5">
               {avatarSrc ? (
                 <img src={avatarSrc} alt={profile.Full_Name} className="w-20 h-20 rounded-full object-cover ring-1 ring-[#414750]/50 shadow-md" />
@@ -272,10 +285,10 @@ export default function Home() {
                 <a href={`mailto:${profile.Email}`} className="hover:text-primary transition-colors">{profile.Email}</a>
               )}
             </div>
-          </header>
+          </motion.header>
 
           {/* ── ABOUT ─────────────────────────────────────────── */}
-          <section id="about" className="space-y-8 scroll-mt-24">
+          <motion.section id="about" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
             <SectionTitle>About</SectionTitle>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
               <div className="md:col-span-4 space-y-2 text-[#8a919b] font-mono text-[11px] tracking-wider uppercase">
@@ -287,10 +300,10 @@ export default function Home() {
                 dangerouslySetInnerHTML={{ __html: profile.Bio_HTML || '<p>Loading bio...</p>' }}
               />
             </div>
-          </section>
+          </motion.section>
 
           {/* ── EXPERIENCE ─────────────────────────────────────── */}
-          <section id="experience" className="space-y-10 scroll-mt-24">
+          <motion.section id="experience" className="space-y-10 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
             <SectionTitle>Experience</SectionTitle>
             {experience.length === 0 ? (
               <p className="text-outline text-sm">No experience entries yet.</p>
@@ -347,10 +360,10 @@ export default function Home() {
                 })}
               </div>
             )}
-          </section>
+          </motion.section>
 
           {/* ── PROJECTS ──────────────────────────────────────── */}
-          <section id="projects" className="space-y-10 scroll-mt-24">
+          <motion.section id="projects" className="space-y-10 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
               <SectionTitle>Selected Projects</SectionTitle>
               <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-[#8a919b]">
@@ -414,10 +427,10 @@ export default function Home() {
                 })}
               </div>
             )}
-          </section>
+          </motion.section>
 
           {/* ── EDUCATION ─────────────────────────────────────── */}
-          <section id="education" className="space-y-8 scroll-mt-24">
+          <motion.section id="education" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
             <SectionTitle>Education</SectionTitle>
             {education.length === 0 ? (
               <p className="text-outline text-sm">No education entries yet.</p>
@@ -442,10 +455,10 @@ export default function Home() {
                 ))}
               </div>
             )}
-          </section>
+          </motion.section>
 
           {/* ── CERTIFICATIONS ──────────────────────────────────── */}
-          <section id="certifications" className="space-y-8 scroll-mt-24">
+          <motion.section id="certifications" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
             <SectionTitle>Certifications</SectionTitle>
             {certifications.length === 0 ? (
               <p className="text-outline text-sm">No certifications yet.</p>
@@ -485,10 +498,10 @@ export default function Home() {
                 })}
               </ul>
             )}
-          </section>
+          </motion.section>
 
           {/* ── SKILLS ─────────────────────────────────────────── */}
-          <section id="skills" className="space-y-8 scroll-mt-24">
+          <motion.section id="skills" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
             <SectionTitle>Skills</SectionTitle>
             {Object.keys(skillsByCategory).length === 0 ? (
               <p className="text-outline text-sm">No skills yet.</p>
@@ -509,10 +522,10 @@ export default function Home() {
                 ))}
               </div>
             )}
-          </section>
+          </motion.section>
 
           {/* ── CONTACT ──────────────────────────────────────── */}
-          <section id="contact" className="space-y-10 scroll-mt-24 pt-4">
+          <motion.section id="contact" className="space-y-10 scroll-mt-24 pt-4" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
             <div className="space-y-3">
               <SectionTitle>Contact</SectionTitle>
               <p className="font-sans text-[48px] leading-[56px] tracking-[-0.03em] font-[600] text-on-surface">Let's build something useful.</p>
@@ -587,7 +600,7 @@ export default function Home() {
               <p>{profile.Full_Name || 'Khizar Nadeem'} <span className="text-[#414750]">|</span> {heroHeading}</p>
               <p>© {new Date().getFullYear()}</p>
             </div>
-          </section>
+          </motion.section>
         </div>
       </main>
 
