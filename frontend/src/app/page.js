@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import BackgroundEffects from '@/components/BackgroundEffects';
 import api from '@/lib/api';
 
 const fadeInUp = {
@@ -221,7 +220,6 @@ export default function Home() {
       </header>
 
       {/* PAGE BODY */}
-      <BackgroundEffects />
       <main className="w-full pt-16 relative z-10">
         <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 py-16 sm:py-24 space-y-28 sm:space-y-36">
 

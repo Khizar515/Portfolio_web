@@ -3,6 +3,12 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api';
+import { motion } from 'framer-motion';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }
+};
 
 const API_BASE = '';
 
@@ -71,8 +77,13 @@ export default function ExperienceDetail() {
         </div>
       </header>
 
-      <main className="w-full pt-16">
-        <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 py-16 sm:py-24 space-y-12">
+      <main className="w-full pt-16 relative z-10">
+        <motion.div 
+          className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 py-16 sm:py-24 space-y-12"
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+        >
 
           {/* Hero */}
           <div className="space-y-4">
@@ -129,7 +140,7 @@ export default function ExperienceDetail() {
               ← All Experience
             </Link>
           </div>
-        </div>
+        </motion.div>
       </main>
     </>
   );

@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import BackgroundEffects from '@/components/BackgroundEffects';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-on-surface`}
       >
+        <BackgroundEffects />
         {children}
       </body>
     </html>
