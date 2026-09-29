@@ -32,7 +32,7 @@ export default function BackgroundEffects() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[-1] overflow-hidden bg-background pointer-events-none">
+    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
       {/* Subtle ambient gradients */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#061426] blur-[120px] rounded-full opacity-60" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#0e1c2e] blur-[120px] rounded-full opacity-60" />

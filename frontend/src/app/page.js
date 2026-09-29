@@ -288,7 +288,7 @@ export default function Home() {
           </motion.header>
 
           {/* ── ABOUT ─────────────────────────────────────────── */}
-          <motion.section id="about" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
+          <motion.section id="about" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-10%" }}>
             <SectionTitle>About</SectionTitle>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
               <div className="md:col-span-4 space-y-2 text-[#8a919b] font-mono text-[11px] tracking-wider uppercase">
@@ -303,7 +303,7 @@ export default function Home() {
           </motion.section>
 
           {/* ── EXPERIENCE ─────────────────────────────────────── */}
-          <motion.section id="experience" className="space-y-10 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
+          <motion.section id="experience" className="space-y-10 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-10%" }}>
             <SectionTitle>Experience</SectionTitle>
             {experience.length === 0 ? (
               <p className="text-outline text-sm">No experience entries yet.</p>
@@ -363,7 +363,7 @@ export default function Home() {
           </motion.section>
 
           {/* ── PROJECTS ──────────────────────────────────────── */}
-          <motion.section id="projects" className="space-y-10 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
+          <motion.section id="projects" className="space-y-10 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-10%" }}>
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
               <SectionTitle>Selected Projects</SectionTitle>
               <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-[#8a919b]">
@@ -430,7 +430,7 @@ export default function Home() {
           </motion.section>
 
           {/* ── EDUCATION ─────────────────────────────────────── */}
-          <motion.section id="education" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
+          <motion.section id="education" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-10%" }}>
             <SectionTitle>Education</SectionTitle>
             {education.length === 0 ? (
               <p className="text-outline text-sm">No education entries yet.</p>
@@ -458,7 +458,7 @@ export default function Home() {
           </motion.section>
 
           {/* ── CERTIFICATIONS ──────────────────────────────────── */}
-          <motion.section id="certifications" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
+          <motion.section id="certifications" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-10%" }}>
             <SectionTitle>Certifications</SectionTitle>
             {certifications.length === 0 ? (
               <p className="text-outline text-sm">No certifications yet.</p>
@@ -501,7 +501,7 @@ export default function Home() {
           </motion.section>
 
           {/* ── SKILLS ─────────────────────────────────────────── */}
-          <motion.section id="skills" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
+          <motion.section id="skills" className="space-y-8 scroll-mt-24" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-10%" }}>
             <SectionTitle>Skills</SectionTitle>
             {Object.keys(skillsByCategory).length === 0 ? (
               <p className="text-outline text-sm">No skills yet.</p>
@@ -525,7 +525,7 @@ export default function Home() {
           </motion.section>
 
           {/* ── CONTACT ──────────────────────────────────────── */}
-          <motion.section id="contact" className="space-y-10 scroll-mt-24 pt-4" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-10%" }}>
+          <motion.section id="contact" className="space-y-10 scroll-mt-24 pt-4" variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: false, margin: "-10%" }}>
             <div className="space-y-3">
               <SectionTitle>Contact</SectionTitle>
               <p className="font-sans text-[48px] leading-[56px] tracking-[-0.03em] font-[600] text-on-surface">Let's build something useful.</p>
