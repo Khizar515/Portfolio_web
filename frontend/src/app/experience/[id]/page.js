@@ -78,7 +78,7 @@ export default function ExperienceDetail() {
       </header>
 
       <main className="w-full pt-16 relative z-10">
-        <motion.div 
+        <motion.div
           className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 py-16 sm:py-24 space-y-12"
           variants={fadeInUp}
           initial="hidden"
@@ -96,7 +96,9 @@ export default function ExperienceDetail() {
             </p>
             <p className="font-mono text-[13px] text-[#8a919b]">
               {startLabel} — {endLabel}
-              {exp.Is_Current && <span className="ml-3 text-primary font-mono text-[11px] bg-[#0e1c2e] border border-primary/40 px-2 py-0.5 rounded">Current Role</span>}
+              {exp.Location && <><span className="mx-2">•</span>{exp.Location}</>}
+              {exp.Employment_Type && <><span className="mx-2">•</span>{exp.Employment_Type}</>}
+              {/* {exp.Is_Current && <span className="ml-3 text-primary font-mono text-[11px] bg-[#0e1c2e] border border-primary/40 px-2 py-0.5 rounded">Current Role</span>} */}
             </p>
           </div>
 
@@ -122,12 +124,24 @@ export default function ExperienceDetail() {
             </div>
           )}
 
+          {/* Overview */}
+          {exp.Overview_HTML && (
+            <div className="space-y-4">
+              <h2 className="font-sans text-[24px] font-[500] text-on-surface">Overview</h2>
+              <div
+                className="font-sans text-[16px] leading-[28px] text-on-surface-variant space-y-4 prose-custom"
+                dangerouslySetInnerHTML={{ __html: exp.Overview_HTML }}
+              />
+            </div>
+          )}
+
           {/* Achievements */}
           {exp.Achievements_HTML && (
             <div className="space-y-4">
-              <div className="w-10 h-0.5 bg-[#414750]" />
+              <div className="w-10 h-0.5 bg-[#414750] my-8" />
+              <h2 className="font-sans text-[24px] font-[500] text-on-surface">Key Achievements</h2>
               <div
-                className="font-sans text-[16px] leading-[28px] text-on-surface-variant space-y-4"
+                className="font-sans text-[16px] leading-[28px] text-on-surface-variant space-y-4 prose-custom"
                 dangerouslySetInnerHTML={{ __html: exp.Achievements_HTML }}
               />
             </div>

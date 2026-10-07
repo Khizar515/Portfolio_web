@@ -62,3 +62,90 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+@layer components {
+  /* Rich Text Customization (.prose-custom) */
+  .prose-custom p {
+    margin-bottom: 1rem;
+  }
+  .prose-custom p:last-child {
+    margin-bottom: 0;
+  }
+  .prose-custom strong, .prose-custom b {
+    font-weight: 600;
+    color: var(--color-on-surface);
+  }
+  .prose-custom em, .prose-custom i {
+    font-style: italic;
+  }
+  .prose-custom u {
+    text-decoration: underline;
+  }
+  .prose-custom mark {
+    background-color: rgba(155, 203, 255, 0.2); /* primary with 20% opacity */
+    color: var(--color-primary);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+  }
+  .prose-custom small {
+    font-size: 0.85em;
+  }
+  .prose-custom del {
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+  .prose-custom ins {
+    text-decoration: none;
+    border-bottom: 1px dashed var(--color-primary);
+  }
+  .prose-custom sup {
+    vertical-align: super;
+    font-size: 0.75em;
+  }
+  .prose-custom sub {
+    vertical-align: sub;
+    font-size: 0.75em;
+  }
+  .prose-custom ul {
+    list-style-type: disc !important;
+    list-style-position: inside !important;
+    margin-left: 0.5rem;
+    margin-bottom: 1rem;
+    display: block !important;
+  }
+  .prose-custom ol {
+    list-style-type: decimal !important;
+    list-style-position: inside !important;
+    margin-left: 0.5rem;
+    margin-bottom: 1rem;
+    display: block !important;
+  }
+  .prose-custom ul li::marker, .prose-custom ol li::marker {
+    color: var(--color-outline);
+  }
+  .prose-custom li {
+    margin-bottom: 0.5rem;
+    padding-left: 0.25rem;
+    display: list-item !important;
+  }
+  .prose-custom li:last-child {
+    margin-bottom: 0;
+  }
+  .prose-custom a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+  .prose-custom a:hover {
+    color: var(--color-secondary);
+  }
+  .prose-custom blockquote {
+    border-left: 3px solid var(--color-primary);
+    padding-left: 1rem;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    color: var(--color-on-surface-variant);
+  }
+}

@@ -20,11 +20,11 @@ const getCertificationById = async (req, res) => {
 };
 
 const createCertification = async (req, res) => {
-  const { Name, Issuer, Date_Issued, Credential_URL, Attachment_Path, Sort_Order } = req.body;
+  const { Name, Issuer, Date_Issued, Credential_URL, Description_HTML, Competency_Tags, Attachment_Path, Sort_Order } = req.body;
   try {
     const [result] = await db.query(
-      'INSERT INTO Certifications (Name, Issuer, Date_Issued, Credential_URL, Attachment_Path, Sort_Order) VALUES (?, ?, ?, ?, ?, ?)',
-      [Name, Issuer, Date_Issued, Credential_URL, Attachment_Path || null, Sort_Order || 0]
+      'INSERT INTO Certifications (Name, Issuer, Date_Issued, Credential_URL, Description_HTML, Competency_Tags, Attachment_Path, Sort_Order) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [Name, Issuer, Date_Issued, Credential_URL, Description_HTML || null, JSON.stringify(Competency_Tags), Attachment_Path || null, Sort_Order || 0]
     );
     res.status(201).json({ message: 'Certification created', id: result.insertId });
   } catch (error) {
@@ -33,11 +33,11 @@ const createCertification = async (req, res) => {
 };
 
 const updateCertification = async (req, res) => {
-  const { Name, Issuer, Date_Issued, Credential_URL, Attachment_Path, Sort_Order } = req.body;
+  const { Name, Issuer, Date_Issued, Credential_URL, Description_HTML, Competency_Tags, Attachment_Path, Sort_Order } = req.body;
   try {
     await db.query(
-      'UPDATE Certifications SET Name=?, Issuer=?, Date_Issued=?, Credential_URL=?, Attachment_Path=?, Sort_Order=? WHERE Cert_ID=?',
-      [Name, Issuer, Date_Issued, Credential_URL, Attachment_Path || null, Sort_Order, req.params.id]
+      'UPDATE Certifications SET Name=?, Issuer=?, Date_Issued=?, Credential_URL=?, Description_HTML=?, Competency_Tags=?, Attachment_Path=?, Sort_Order=? WHERE Cert_ID=?',
+      [Name, Issuer, Date_Issued, Credential_URL, Description_HTML || null, JSON.stringify(Competency_Tags), Attachment_Path || null, Sort_Order, req.params.id]
     );
     res.json({ message: 'Certification updated' });
   } catch (error) {

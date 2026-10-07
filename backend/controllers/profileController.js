@@ -11,7 +11,7 @@ const getProfile = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const { Full_Name, Tagline, Bio_HTML, GitHub_URL, LinkedIn_URL, Email } = req.body;
+  const { Full_Name, Tagline, Headline, Bio_HTML, GitHub_URL, LinkedIn_URL, Email } = req.body;
   
   let Avatar_Path = req.body.Avatar_Path;
   let Resume_Path = req.body.Resume_Path;
@@ -28,13 +28,13 @@ const updateProfile = async (req, res) => {
     
     if (existing.length > 0) {
       await db.query(
-        'UPDATE Profile SET Full_Name=?, Tagline=?, Bio_HTML=?, GitHub_URL=?, LinkedIn_URL=?, Email=?, Avatar_Path=?, Resume_Path=? WHERE Profile_ID=?',
-        [Full_Name, Tagline, Bio_HTML, GitHub_URL, LinkedIn_URL, Email, Avatar_Path, Resume_Path, existing[0].Profile_ID]
+        'UPDATE Profile SET Full_Name=?, Tagline=?, Headline=?, Bio_HTML=?, GitHub_URL=?, LinkedIn_URL=?, Email=?, Avatar_Path=?, Resume_Path=? WHERE Profile_ID=?',
+        [Full_Name, Tagline, Headline, Bio_HTML, GitHub_URL, LinkedIn_URL, Email, Avatar_Path, Resume_Path, existing[0].Profile_ID]
       );
     } else {
       await db.query(
-        'INSERT INTO Profile (Full_Name, Tagline, Bio_HTML, GitHub_URL, LinkedIn_URL, Email, Avatar_Path, Resume_Path) VALUES (?,?,?,?,?,?,?,?)',
-        [Full_Name, Tagline, Bio_HTML, GitHub_URL, LinkedIn_URL, Email, Avatar_Path, Resume_Path]
+        'INSERT INTO Profile (Full_Name, Tagline, Headline, Bio_HTML, GitHub_URL, LinkedIn_URL, Email, Avatar_Path, Resume_Path) VALUES (?,?,?,?,?,?,?,?,?)',
+        [Full_Name, Tagline, Headline, Bio_HTML, GitHub_URL, LinkedIn_URL, Email, Avatar_Path, Resume_Path]
       );
     }
     res.json({ message: 'Profile updated' });

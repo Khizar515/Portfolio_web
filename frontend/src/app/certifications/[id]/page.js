@@ -17,6 +17,12 @@ function isVideo(path) {
   return /\.(mp4|webm|ogg|mov)$/i.test(path);
 }
 
+const ArrowUpRight = ({ className = "text-primary" }) => (
+  <svg className={`w-[11px] h-[11px] opacity-75 inline-block ml-1 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+  </svg>
+);
+
 export default function CertificationDetail() {
   const { id } = useParams();
   const [cert, setCert] = useState(null);
@@ -56,6 +62,8 @@ export default function CertificationDetail() {
   const mediaPath = cert.Attachment_Path;
   const mediaSrc = mediaPath ? `${API_BASE}/uploads/${mediaPath}` : null;
   const issuedYear = cert.Date_Issued ? new Date(cert.Date_Issued).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : null;
+  
+  const tags = Array.isArray(cert.Competency_Tags) ? cert.Competency_Tags : (typeof cert.Competency_Tags === 'string' ? JSON.parse(cert.Competency_Tags || '[]') : []);
 
   return (
     <>
@@ -87,18 +95,39 @@ export default function CertificationDetail() {
             {issuedYear && (
               <p className="font-mono text-[13px] text-[#8a919b]">Issued: {issuedYear}</p>
             )}
+            
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-2">
+                {tags.map((t, i) => (
+                  <span key={i} className="font-mono text-[11px] text-primary bg-[#0e1c2e] border border-[#1d2b3d] px-2.5 py-1 rounded">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* View Credential */}
           {cert.Credential_URL && (
             <a
-              href={cert.Credential_URL}
+              href={cert.Credential_URL.startsWith('http') ? cert.Credential_URL : `https://${cert.Credential_URL}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#006daa] hover:bg-[#4c95d8] text-on-surface rounded font-sans text-[14px] transition-colors"
+              className="inline-flex items-center px-5 py-2.5 bg-[#006daa] hover:bg-[#4c95d8] text-on-surface rounded font-sans text-[14px] transition-colors"
             >
-              View Credential ↗
+              View Credential <ArrowUpRight className="text-on-surface" />
             </a>
+          )}
+
+          {/* Description */}
+          {cert.Description_HTML && (
+            <div className="space-y-4">
+              <div className="w-10 h-0.5 bg-[#414750]" />
+              <div
+                className="font-sans text-[16px] leading-[28px] text-on-surface-variant space-y-4 prose-custom"
+                dangerouslySetInnerHTML={{ __html: cert.Description_HTML }}
+              />
+            </div>
           )}
 
           {/* Media (certificate image/video) */}

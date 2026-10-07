@@ -17,16 +17,29 @@ function isVideo(path) {
   return /\.(mp4|webm|ogg|mov)$/i.test(path);
 }
 
+const ArrowUpRight = ({ className = "text-primary" }) => (
+  <svg className={`w-[11px] h-[11px] opacity-75 inline-block ml-1 ${className}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+  </svg>
+);
+
 export default function ProjectDetail() {
   const { slug } = useParams();
   const [project, setProject] = useState(null);
+  const [gallery, setGallery] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!slug) return;
-    api.get(`/projects/${slug}`)
-      .then(res => setProject(res.data))
+    Promise.all([
+      api.get(`/projects/${slug}`),
+      api.get(`/projects/${slug}/gallery`).catch(() => ({ data: [] }))
+    ])
+      .then(([projRes, galRes]) => {
+        setProject(projRes.data);
+        setGallery(galRes.data || []);
+      })
       .catch(err => {
         if (err.response?.status === 404) setNotFound(true);
       })
@@ -57,7 +70,7 @@ export default function ProjectDetail() {
     ? project.Tech_Tags
     : (typeof project.Tech_Tags === 'string' ? JSON.parse(project.Tech_Tags || '[]') : []);
 
-  const mediaPath = project.Image_Path;
+  const mediaPath = project.Video_URL || project.Image_Path;
   const mediaSrc = mediaPath ? `${API_BASE}/uploads/${mediaPath}` : null;
 
   return (
@@ -97,6 +110,12 @@ export default function ProjectDetail() {
               {project.Title}
             </h1>
 
+            {project.Role && (
+               <p className="font-mono text-[13px] uppercase tracking-widest text-primary font-[500]">
+                 Role: {project.Role}
+               </p>
+            )}
+
             {project.Summary && (
               <p className="font-sans text-[20px] leading-[30px] text-on-surface-variant">
                 {project.Summary}
@@ -106,22 +125,22 @@ export default function ProjectDetail() {
             <div className="flex flex-wrap items-center gap-5">
               {project.Repo_URL && (
                 <a
-                  href={project.Repo_URL}
+                  href={project.Repo_URL.startsWith('http') ? project.Repo_URL : `https://${project.Repo_URL}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#006daa] hover:bg-[#4c95d8] text-on-surface rounded font-sans text-[13px] transition-colors"
+                  className="inline-flex items-center px-4 py-2 bg-[#006daa] hover:bg-[#4c95d8] text-on-surface rounded font-sans text-[13px] transition-colors"
                 >
-                  GitHub ↗
+                  GitHub <ArrowUpRight className="text-on-surface" />
                 </a>
               )}
               {project.Live_URL && (
                 <a
-                  href={project.Live_URL}
+                  href={project.Live_URL.startsWith('http') ? project.Live_URL : `https://${project.Live_URL}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 border border-[#414750] hover:border-primary text-on-surface-variant hover:text-on-surface rounded font-sans text-[13px] transition-colors"
+                  className="inline-flex items-center px-4 py-2 border border-[#414750] hover:border-primary text-on-surface-variant hover:text-on-surface rounded font-sans text-[13px] transition-colors"
                 >
-                  Live Demo ↗
+                  Live Demo <ArrowUpRight className="text-on-surface-variant group-hover:text-on-surface" />
                 </a>
               )}
             </div>
@@ -155,6 +174,18 @@ export default function ProjectDetail() {
                 dangerouslySetInnerHTML={{ __html: project.Description_HTML }}
               />
             </div>
+          )}
+
+          {/* Gallery */}
+          {gallery.length > 0 && (
+             <div className="space-y-6 pt-8 border-t border-[#414750]/30">
+               <h2 className="font-sans text-[24px] font-[500] text-on-surface">Interface Gallery</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 {gallery.map(g => (
+                    <img key={g.Gallery_ID} src={`${API_BASE}/uploads/${g.Image_Path}`} alt="Gallery image" className="w-full h-auto rounded-lg border border-[#1d2b3d] bg-[#132033]" />
+                 ))}
+               </div>
+             </div>
           )}
 
           {/* Meta footer */}

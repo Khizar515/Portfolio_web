@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 
 const EMPTY_FORM = {
-  Title: '', Slug: '', Summary: '', Description_HTML: '', Repo_URL: '', Live_URL: '', Image_Path: '', Tech_Tags: '', Is_Featured: false, Status: 'published'
+  Title: '', Slug: '', Summary: '', Description_HTML: '', Repo_URL: '', Live_URL: '', Image_Path: '', Video_URL: '', Role: '', Tech_Tags: '', Is_Featured: false, Status: 'published'
 };
 
 function toSlug(str) {
@@ -19,6 +19,8 @@ export default function ProjectsAdmin() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [gallery, setGallery] = useState([]);
+  const [galleryUploading, setGalleryUploading] = useState(false);
 
   const API_BASE = '';
 
@@ -42,12 +44,16 @@ export default function ProjectsAdmin() {
     });
   };
 
-  const handleEdit = (p) => {
+  const handleEdit = async (p) => {
     const tags = Array.isArray(p.Tech_Tags) ? p.Tech_Tags : (typeof p.Tech_Tags === 'string' ? JSON.parse(p.Tech_Tags || '[]') : []);
     setForm({ ...p, Tech_Tags: tags.join(', '), Is_Featured: !!p.Is_Featured });
     setEditId(p.Project_ID);
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      const res = await api.get(`/projects/${p.Slug}/gallery`);
+      setGallery(res.data || []);
+    } catch { setGallery([]); }
   };
 
   const handleSubmit = async (e) => {
@@ -102,11 +108,45 @@ export default function ProjectsAdmin() {
       const res = await api.post('/admin/media/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setForm(p => ({ ...p, Image_Path: res.data.filepath }));
-      showMsg('Image uploaded.');
+      // If it's a video file, save to Video_URL, else Image_Path
+      if (file.type.startsWith('video/')) {
+        setForm(p => ({ ...p, Video_URL: res.data.filepath }));
+      } else {
+        setForm(p => ({ ...p, Image_Path: res.data.filepath }));
+      }
+      showMsg('Media uploaded.');
     } catch {
       showMsg('Upload failed.');
     } finally { setUploading(false); }
+  };
+
+  const handleGalleryUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !editId) return;
+    setGalleryUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await api.post('/admin/media/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      await api.post(`/projects/${editId}/gallery`, {
+        Image_Path: res.data.filepath,
+        Sort_Order: gallery.length
+      });
+      const gRes = await api.get(`/projects/${form.Slug}/gallery`);
+      setGallery(gRes.data || []);
+      showMsg('Gallery image added.');
+    } catch {
+      showMsg('Gallery upload failed.');
+    } finally { setGalleryUploading(false); }
+  };
+
+  const handleDeleteGallery = async (galleryId) => {
+    try {
+      await api.delete(`/projects/gallery/${galleryId}`);
+      setGallery(gallery.filter(g => g.Gallery_ID !== galleryId));
+    } catch { showMsg('Failed to delete gallery image.'); }
   };
 
   const inputClass = "w-full p-2.5 bg-[#132033] rounded border border-[#1d2b3d] text-on-surface text-sm focus:border-primary focus:outline-none";
@@ -143,6 +183,10 @@ export default function ProjectsAdmin() {
             <input name="Summary" value={form.Summary} onChange={handleChange} required className={inputClass} maxLength={255} />
           </div>
           <div>
+            <label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Role (e.g. Lead Architect)</label>
+            <input name="Role" value={form.Role || ''} onChange={handleChange} className={inputClass} maxLength={100} />
+          </div>
+          <div>
             <label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Description (HTML)</label>
             <textarea name="Description_HTML" value={form.Description_HTML} onChange={handleChange} rows={4} className={inputClass} />
           </div>
@@ -156,14 +200,23 @@ export default function ProjectsAdmin() {
               <input name="Live_URL" value={form.Live_URL} onChange={handleChange} className={inputClass} />
             </div>
           </div>
-          <div>
-            <label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Cover Image (optional)</label>
-            <div className="flex items-center gap-4">
-              {form.Image_Path && (
-                <img src={`${API_BASE}/uploads/${form.Image_Path}`} alt="Preview" className="w-20 h-14 object-cover rounded border border-[#1d2b3d]" />
-              )}
-              <input type="file" accept="image/*,video/*" onChange={handleUpload} disabled={uploading} className="text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-[#1d2b3d] file:text-primary hover:file:bg-[#2a3c53] cursor-pointer" />
-              {uploading && <span className="text-xs text-[#8a919b]">Uploading...</span>}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Cover Media (Image or Video)</label>
+              <div className="flex flex-col gap-2">
+                {form.Image_Path && !form.Video_URL && (
+                  <img src={`${API_BASE}/uploads/${form.Image_Path}`} alt="Preview" className="w-24 h-16 object-cover rounded border border-[#1d2b3d]" />
+                )}
+                {form.Video_URL && (
+                  <video src={`${API_BASE}/uploads/${form.Video_URL}`} className="w-24 h-16 object-cover rounded border border-[#1d2b3d]" muted />
+                )}
+                <input type="file" accept="image/*,video/*" onChange={handleUpload} disabled={uploading} className="text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-[#1d2b3d] file:text-primary hover:file:bg-[#2a3c53] cursor-pointer" />
+                {uploading && <span className="text-xs text-[#8a919b]">Uploading...</span>}
+              </div>
+            </div>
+            <div>
+               <label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Video URL (Upload above to set)</label>
+               <input value={form.Video_URL || 'No video'} disabled className={`${inputClass} opacity-50`} />
             </div>
           </div>
           <div>
@@ -196,6 +249,25 @@ export default function ProjectsAdmin() {
             {saving ? 'Saving...' : editId ? 'Update Project' : 'Create Project'}
           </button>
         </form>
+      )}
+
+      {showForm && editId && (
+        <div className="p-5 bg-[#0e1c2e] border border-[#1d2b3d] rounded mt-6">
+          <h2 className="text-lg font-medium mb-4">Project Gallery</h2>
+          <div className="flex gap-4 items-center mb-4">
+             <input type="file" accept="image/*" onChange={handleGalleryUpload} disabled={galleryUploading} className="text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-[#1d2b3d] file:text-primary hover:file:bg-[#2a3c53] cursor-pointer" />
+             {galleryUploading && <span className="text-xs text-[#8a919b]">Uploading to gallery...</span>}
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+             {gallery.map(g => (
+                <div key={g.Gallery_ID} className="relative group">
+                  <img src={`${API_BASE}/uploads/${g.Image_Path}`} alt="Gallery item" className="w-full h-24 object-cover rounded border border-[#1d2b3d]" />
+                  <button onClick={() => handleDeleteGallery(g.Gallery_ID)} className="absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">&times;</button>
+                </div>
+             ))}
+             {gallery.length === 0 && <p className="text-sm text-outline">No images in gallery.</p>}
+          </div>
+        </div>
       )}
 
       {/* Projects Table */}

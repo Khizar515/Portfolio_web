@@ -51,6 +51,8 @@ services:
       args:
         # /api is relative — browser calls khizar.ksdev.me/api/* which Next.js rewrites proxy to backend
         NEXT_PUBLIC_API_URL: /api
+        # local developement
+        # NEXT_PUBLIC_API_URL: http://localhost:5000/api
         # Docker-internal address the Next.js SERVER uses to reach backend for rewrites
         INTERNAL_API_URL: http://backend:5000
     container_name: portfolio_frontend

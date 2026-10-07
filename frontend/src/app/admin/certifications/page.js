@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 
-const EMPTY_FORM = { Name: '', Issuer: '', Date_Issued: '', Credential_URL: '', Attachment_Path: '', Sort_Order: 0 };
+const EMPTY_FORM = { Name: '', Issuer: '', Date_Issued: '', Credential_URL: '', Description_HTML: '', Competency_Tags: '', Attachment_Path: '', Sort_Order: 0 };
 
 export default function CertificationsAdmin() {
   const [items, setItems] = useState([]);
@@ -43,14 +43,16 @@ export default function CertificationsAdmin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (editId) { await api.put(`/certifications/${editId}`, form); showMsg('Updated.'); }
-      else { await api.post('/certifications', form); showMsg('Created.'); }
+      const payload = { ...form, Competency_Tags: form.Competency_Tags ? form.Competency_Tags.split(',').map(t => t.trim()).filter(Boolean) : [] };
+      if (editId) { await api.put(`/certifications/${editId}`, payload); showMsg('Updated.'); }
+      else { await api.post('/certifications', payload); showMsg('Created.'); }
       setForm(EMPTY_FORM); setEditId(null); setShowForm(false); fetchData();
     } catch { showMsg('Error saving.'); }
   };
 
   const handleEdit = (item) => {
-    setForm({ ...item, Date_Issued: item.Date_Issued ? item.Date_Issued.split('T')[0] : '' });
+    const tags = Array.isArray(item.Competency_Tags) ? item.Competency_Tags : (typeof item.Competency_Tags === 'string' ? JSON.parse(item.Competency_Tags || '[]') : []);
+    setForm({ ...item, Date_Issued: item.Date_Issued ? item.Date_Issued.split('T')[0] : '', Competency_Tags: tags.join(', ') });
     setEditId(item.Cert_ID); setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -82,7 +84,12 @@ export default function CertificationsAdmin() {
             <div><label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Issuer *</label><input name="Issuer" value={form.Issuer} onChange={handleChange} required className={inputClass} /></div>
             <div><label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Date Issued</label><input type="date" name="Date_Issued" value={form.Date_Issued} onChange={handleChange} className={inputClass} /></div>
             <div><label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Credential URL</label><input name="Credential_URL" value={form.Credential_URL} onChange={handleChange} className={inputClass} /></div>
+            <div><label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Competency Tags (comma-separated)</label><input name="Competency_Tags" value={form.Competency_Tags || ''} onChange={handleChange} placeholder="Security, Networking" className={inputClass} /></div>
             <div><label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Sort Order</label><input type="number" name="Sort_Order" value={form.Sort_Order} onChange={handleChange} className={inputClass} /></div>
+          </div>
+          <div>
+            <label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Credential Scope / Description (HTML allowed)</label>
+            <textarea name="Description_HTML" value={form.Description_HTML || ''} onChange={handleChange} rows={4} className={inputClass} />
           </div>
           <div>
             <label className="block text-xs font-mono uppercase text-[#8a919b] mb-1">Attachment (Optional)</label>

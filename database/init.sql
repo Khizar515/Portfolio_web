@@ -177,3 +177,24 @@ INSERT INTO Skills (Name, Category, Proficiency_Level, Sort_Order) VALUES
 ('Cloudflare Tunnel', 'Networking & Tools', 'intermediate', 2),
 ('Postman', 'Networking & Tools', 'advanced', 3),
 ('Nginx', 'Networking & Tools', 'intermediate', 4);
+-- Migration: Add new columns and tables
+ALTER TABLE Profile ADD COLUMN Headline VARCHAR(255) DEFAULT NULL;
+
+ALTER TABLE Projects ADD COLUMN Video_URL VARCHAR(255) DEFAULT NULL;
+ALTER TABLE Projects ADD COLUMN Role VARCHAR(100) DEFAULT NULL;
+
+ALTER TABLE Experience ADD COLUMN Overview_HTML TEXT DEFAULT NULL;
+ALTER TABLE Experience ADD COLUMN Location VARCHAR(150) DEFAULT NULL;
+ALTER TABLE Experience ADD COLUMN Employment_Type VARCHAR(50) DEFAULT NULL;
+
+ALTER TABLE Certifications ADD COLUMN Description_HTML TEXT DEFAULT NULL;
+ALTER TABLE Certifications ADD COLUMN Competency_Tags JSON DEFAULT NULL;
+
+CREATE TABLE IF NOT EXISTS Project_Gallery (
+  Gallery_ID INT PRIMARY KEY AUTO_INCREMENT,
+  Project_ID INT NOT NULL,
+  Image_Path VARCHAR(255) NOT NULL,
+  Caption VARCHAR(255) DEFAULT NULL,
+  Sort_Order INT DEFAULT 0,
+  FOREIGN KEY (Project_ID) REFERENCES Projects(Project_ID) ON DELETE CASCADE
+);

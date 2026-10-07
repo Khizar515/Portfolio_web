@@ -27,6 +27,18 @@ function SectionTitle({ children }) {
   );
 }
 
+const ArrowUpRight = () => (
+  <svg className="w-[11px] h-[11px] opacity-75 inline-block text-primary ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+  </svg>
+);
+
+const ArrowRight = () => (
+  <svg className="w-[12px] h-[12px] opacity-75 inline-block text-primary ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+  </svg>
+);
+
 /** Returns a human-readable duration string between two dates */
 function getDuration(startRaw, endRaw, isCurrent) {
   if (!startRaw) return '';
@@ -148,6 +160,11 @@ export default function Home() {
     return /\.(mp4|webm|ogg|mov)$/i.test(path);
   }
 
+  function absUrl(url) {
+    if (!url) return '#';
+    return url.startsWith('http') ? url : `https://${url}`;
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -167,11 +184,8 @@ export default function Home() {
     ? `${API_BASE}/uploads/${profile.Resume_Path}`
     : '#';
 
-  // Extract first part of tagline for the big heading
   const rawTagline = profile.Tagline || 'Full-Stack & Mobile Developer';
-  // Split by |, -, or , to get the first part
-  const taglineParts = rawTagline.split('|');
-  const heroHeading = taglineParts[0].trim();
+  const heroHeading = profile.Headline || rawTagline.split('|')[0].trim();
   const heroSubheading = rawTagline;
 
 
@@ -258,11 +272,11 @@ export default function Home() {
             </div>
 
             <div className="flex flex-wrap items-center gap-6 pt-2">
-              <a href="#projects" className="text-primary hover:text-[#96cbff] flex items-center gap-1.5 transition-colors text-[14px]">
-                View Projects <span className="font-mono">→</span>
+              <a href="#projects" className="text-primary hover:text-[#96cbff] flex items-center transition-colors text-[14px]">
+                View Projects <ArrowUpRight />
               </a>
-              <a href="#contact" className="text-on-surface-variant hover:text-on-surface flex items-center gap-1.5 transition-colors text-[14px]">
-                Get in Touch <span className="font-mono">→</span>
+              <a href="#contact" className="text-on-surface-variant hover:text-on-surface flex items-center transition-colors text-[14px]">
+                Get in Touch <ArrowUpRight />
               </a>
             </div>
 
@@ -294,7 +308,7 @@ export default function Home() {
                 <div className="w-10 h-0.5 bg-[#414750]" />
               </div>
               <div
-                className="md:col-span-8 space-y-5 font-sans text-[16px] leading-[26px] text-on-surface-variant"
+                className="md:col-span-8 space-y-5 font-sans text-[16px] leading-[26px] text-on-surface-variant prose-custom"
                 dangerouslySetInnerHTML={{ __html: profile.Bio_HTML || '<p>Loading bio...</p>' }}
               />
             </div>
@@ -335,11 +349,11 @@ export default function Home() {
                               </h3>
                               <div className="flex items-center gap-2">
                                 <span className="font-mono text-[11px] text-[#8a919b]">{startLabel} — {endLabel}</span>
-                                {duration && <span className="font-mono text-[10px] text-primary bg-[#0e1c2e] border border-primary/30 px-1.5 py-0.5 rounded">{duration}</span>}
+                                {duration && <span className="font-mono text-[10px] text-primary bg-[#0e1c2e] border border-primary/30 px-1.5 py-0.5 rounded whitespace-nowrap">{duration}</span>}
                               </div>
                             </div>
                             <div
-                              className="font-sans text-[14px] leading-[22px] text-on-surface-variant line-clamp-3"
+                              className="font-sans text-[14px] leading-[22px] text-on-surface-variant line-clamp-3 prose-custom"
                               dangerouslySetInnerHTML={{ __html: exp.Achievements_HTML || '' }}
                             />
                             {tags.length > 0 && (
@@ -349,7 +363,7 @@ export default function Home() {
                                 ))}
                               </p>
                             )}
-                            <span className="font-mono text-[11px] text-primary opacity-0 group-hover:opacity-100 transition-opacity">View details →</span>
+                            <span className="font-mono text-[11px] text-primary opacity-0 group-hover:opacity-100 transition-opacity flex items-center mt-2">View details <ArrowRight /></span>
                           </div>
                         </div>
                       </Link>
@@ -405,8 +419,8 @@ export default function Home() {
                                 {p.Title}
                               </h3>
                               <div className="flex items-center gap-4 font-mono text-[11px]" onClick={e => e.stopPropagation()}>
-                                {p.Repo_URL && <a href={p.Repo_URL} target="_blank" rel="noreferrer" className="text-primary hover:underline">GitHub ↗</a>}
-                                {p.Live_URL && <a href={p.Live_URL} target="_blank" rel="noreferrer" className="text-on-surface-variant hover:text-on-surface hover:underline">Live Demo ↗</a>}
+                                {p.Repo_URL && <a href={absUrl(p.Repo_URL)} target="_blank" rel="noreferrer" className="text-primary hover:underline flex items-center">GitHub <ArrowUpRight /></a>}
+                                {p.Live_URL && <a href={absUrl(p.Live_URL)} target="_blank" rel="noreferrer" className="text-on-surface-variant hover:text-on-surface hover:underline flex items-center">Live Demo <ArrowUpRight /></a>}
                               </div>
                             </div>
                             <p className="font-sans text-[14px] leading-[22px] text-on-surface-variant">{p.Summary}</p>
@@ -488,7 +502,7 @@ export default function Home() {
                               {cert.Date_Issued && <><span className="text-[#414750] mx-1">·</span>{new Date(cert.Date_Issued).getFullYear()}</>}
                             </p>
                           </div>
-                          <span className="font-mono text-[11px] text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">View →</span>
+                          <span className="font-mono text-[11px] text-primary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap flex items-center">View <ArrowRight /></span>
                         </div>
                       </Link>
                     </li>
@@ -572,9 +586,9 @@ export default function Home() {
                 />
               </div>
               <div className="pt-1">
-                <button type="submit" className="inline-flex items-center justify-center px-5 py-2.5 bg-[#006daa] hover:bg-[#4c95d8] text-on-surface rounded font-sans text-[14px] transition-colors gap-2">
+                <button type="submit" className="inline-flex items-center justify-center px-5 py-2.5 bg-[#006daa] hover:bg-[#4c95d8] text-on-surface rounded font-sans text-[14px] transition-colors gap-1.5">
                   <span>Send Message</span>
-                  <span className="font-mono">→</span>
+                  <ArrowRight />
                 </button>
               </div>
               {formStatus === 'success' && (

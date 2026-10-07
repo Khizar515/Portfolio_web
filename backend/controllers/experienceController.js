@@ -20,11 +20,11 @@ const getExperienceById = async (req, res) => {
 };
 
 const createExperience = async (req, res) => {
-  const { Job_Title, Company, Start_Date, End_Date, Is_Current, Achievements_HTML, Tech_Tags, Attachment_Path, Sort_Order } = req.body;
+  const { Job_Title, Company, Start_Date, End_Date, Is_Current, Achievements_HTML, Overview_HTML, Location, Employment_Type, Tech_Tags, Attachment_Path, Sort_Order } = req.body;
   try {
     const [result] = await db.query(
-      'INSERT INTO Experience (Job_Title, Company, Start_Date, End_Date, Is_Current, Achievements_HTML, Tech_Tags, Attachment_Path, Sort_Order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [Job_Title, Company, Start_Date, End_Date, Is_Current || 0, Achievements_HTML, JSON.stringify(Tech_Tags), Attachment_Path || null, Sort_Order || 0]
+      'INSERT INTO Experience (Job_Title, Company, Start_Date, End_Date, Is_Current, Achievements_HTML, Overview_HTML, Location, Employment_Type, Tech_Tags, Attachment_Path, Sort_Order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [Job_Title, Company, Start_Date, End_Date, Is_Current || 0, Achievements_HTML, Overview_HTML || null, Location || null, Employment_Type || null, JSON.stringify(Tech_Tags), Attachment_Path || null, Sort_Order || 0]
     );
     res.status(201).json({ message: 'Experience created', id: result.insertId });
   } catch (error) {
@@ -33,11 +33,11 @@ const createExperience = async (req, res) => {
 };
 
 const updateExperience = async (req, res) => {
-  const { Job_Title, Company, Start_Date, End_Date, Is_Current, Achievements_HTML, Tech_Tags, Attachment_Path, Sort_Order } = req.body;
+  const { Job_Title, Company, Start_Date, End_Date, Is_Current, Achievements_HTML, Overview_HTML, Location, Employment_Type, Tech_Tags, Attachment_Path, Sort_Order } = req.body;
   try {
     await db.query(
-      'UPDATE Experience SET Job_Title=?, Company=?, Start_Date=?, End_Date=?, Is_Current=?, Achievements_HTML=?, Tech_Tags=?, Attachment_Path=?, Sort_Order=? WHERE Exp_ID=?',
-      [Job_Title, Company, Start_Date, End_Date, Is_Current, Achievements_HTML, JSON.stringify(Tech_Tags), Attachment_Path || null, Sort_Order, req.params.id]
+      'UPDATE Experience SET Job_Title=?, Company=?, Start_Date=?, End_Date=?, Is_Current=?, Achievements_HTML=?, Overview_HTML=?, Location=?, Employment_Type=?, Tech_Tags=?, Attachment_Path=?, Sort_Order=? WHERE Exp_ID=?',
+      [Job_Title, Company, Start_Date, End_Date, Is_Current, Achievements_HTML, Overview_HTML || null, Location || null, Employment_Type || null, JSON.stringify(Tech_Tags), Attachment_Path || null, Sort_Order, req.params.id]
     );
     res.json({ message: 'Experience updated' });
   } catch (error) {

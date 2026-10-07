@@ -79,7 +79,7 @@ function FileUploadField({ label, accept, onChange, currentFilename, currentPrev
 
 export default function ProfileManagement() {
   const [profile, setProfile] = useState({
-    Full_Name: '', Tagline: '', Bio_HTML: '', GitHub_URL: '', LinkedIn_URL: '', Email: '', Avatar_Path: '', Resume_Path: ''
+    Full_Name: '', Tagline: '', Headline: '', Bio_HTML: '', GitHub_URL: '', LinkedIn_URL: '', Email: '', Avatar_Path: '', Resume_Path: ''
   });
   const [message, setMessage] = useState({ text: '', type: '' });
   const [avatarFile, setAvatarFile] = useState(null);
@@ -113,7 +113,7 @@ export default function ProfileManagement() {
     try {
       const formData = new FormData();
       // Append all text fields
-      ['Full_Name', 'Tagline', 'Bio_HTML', 'GitHub_URL', 'LinkedIn_URL', 'Email', 'Avatar_Path', 'Resume_Path'].forEach(k => {
+      ['Full_Name', 'Tagline', 'Headline', 'Bio_HTML', 'GitHub_URL', 'LinkedIn_URL', 'Email', 'Avatar_Path', 'Resume_Path'].forEach(k => {
         if (profile[k] != null) formData.append(k, profile[k]);
       });
       if (avatarFile) formData.append('avatar', avatarFile);
@@ -231,9 +231,15 @@ export default function ProfileManagement() {
             <input name="Email" type="email" value={profile.Email || ''} onChange={handleChange} className={inputClass} />
           </div>
         </div>
-        <div>
-          <label className={labelClass}>Tagline</label>
-          <input name="Tagline" value={profile.Tagline || ''} onChange={handleChange} className={inputClass} placeholder="Full-Stack Developer | ..." />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className={labelClass}>Headline</label>
+            <input name="Headline" value={profile.Headline || ''} onChange={handleChange} className={inputClass} placeholder="Short hero headline..." />
+          </div>
+          <div>
+            <label className={labelClass}>Tagline</label>
+            <input name="Tagline" value={profile.Tagline || ''} onChange={handleChange} className={inputClass} placeholder="Full-Stack Developer | ..." />
+          </div>
         </div>
         <div>
           <label className={labelClass}>Bio (HTML allowed)</label>

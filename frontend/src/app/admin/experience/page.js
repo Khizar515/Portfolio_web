@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 
-const EMPTY = { Job_Title: '', Company: '', Start_Date: '', End_Date: '', Is_Current: false, Achievements_HTML: '', Tech_Tags: '', Attachment_Path: '', Sort_Order: 0 };
+const EMPTY = { Job_Title: '', Company: '', Location: '', Employment_Type: '', Start_Date: '', End_Date: '', Is_Current: false, Overview_HTML: '', Achievements_HTML: '', Tech_Tags: '', Attachment_Path: '', Sort_Order: 0 };
 
 export default function ExperienceAdmin() {
   const [items, setItems] = useState([]);
@@ -101,6 +101,18 @@ export default function ExperienceAdmin() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div><label className={lc}>Job Title *</label><input name="Job_Title" value={form.Job_Title} onChange={handleChange} required className={ic} /></div>
             <div><label className={lc}>Company *</label><input name="Company" value={form.Company} onChange={handleChange} required className={ic} /></div>
+            <div><label className={lc}>Location</label><input name="Location" value={form.Location || ''} onChange={handleChange} className={ic} placeholder="e.g. Remote, New York" /></div>
+            <div>
+              <label className={lc}>Employment Type</label>
+              <select name="Employment_Type" value={form.Employment_Type || ''} onChange={handleChange} className={ic}>
+                 <option value="">Select...</option>
+                 <option value="Full-time">Full-time</option>
+                 <option value="Part-time">Part-time</option>
+                 <option value="Contract">Contract</option>
+                 <option value="Freelance">Freelance</option>
+                 <option value="Internship">Internship</option>
+              </select>
+            </div>
             <div><label className={lc}>Start Date *</label><input type="date" name="Start_Date" value={form.Start_Date} onChange={handleChange} required className={ic} /></div>
             <div>
               <label className={lc}>End Date</label>
@@ -112,7 +124,11 @@ export default function ExperienceAdmin() {
             <label htmlFor="Is_Current" className="text-sm text-on-surface-variant cursor-pointer">Currently working here</label>
           </div>
           <div>
-            <label className={lc}>Achievements (HTML allowed)</label>
+            <label className={lc}>Overview & Mandate (HTML allowed)</label>
+            <textarea name="Overview_HTML" value={form.Overview_HTML || ''} onChange={handleChange} rows={3} className={ic} />
+          </div>
+          <div>
+            <label className={lc}>Key Achievements (HTML allowed)</label>
             <textarea name="Achievements_HTML" value={form.Achievements_HTML} onChange={handleChange} rows={4} className={ic} />
           </div>
           <div>
